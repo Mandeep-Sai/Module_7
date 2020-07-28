@@ -132,7 +132,7 @@ export class StudentsList extends Component {
                   </td>
                   <td>{student.surname}</td>
                   <td>{student.email}</td>
-                  <td>{student.dob}</td>
+                  <td>{student.dateOfBirth.slice(0, 10)}</td>
                   <td>{student.country}</td>
                   <td>
                     {" "}

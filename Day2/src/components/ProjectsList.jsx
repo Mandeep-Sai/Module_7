@@ -45,6 +45,7 @@ class ProjectsList extends Component {
                   <td>{project.studentId}</td>
                   <td>
                     {" "}
+                    {/*}
                     <Button
                       variant="danger"
                       onClick={() => this.delProject(project._id)}
@@ -60,6 +61,7 @@ class ProjectsList extends Component {
                     >
                       Edit
                     </Button>
+              */}
                   </td>
                 </tr>
               );

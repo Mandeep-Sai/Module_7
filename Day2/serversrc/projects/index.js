@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
 //GET project by ID
 router.get("/:id", async (req, res) => {
   try {
-    const project = await projectModel.find({ studentId: req.params.id });
+    const project = await projectModel.findById(req.params.id);
     res.send(project);
   } catch (error) {
     console.log(error);
