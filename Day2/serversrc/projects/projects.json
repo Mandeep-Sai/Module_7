@@ -1,0 +1,24 @@
+[
+    {
+        "name": "netflix",
+        "description": "cloning a netflix website",
+        "creationDate": "15.06.2020",
+        "studentId": "3qhn439fwkburb6qw",
+        "repoUrl": "www.github.com",
+        "liveUrl": "www.liveurl.com",
+        "id": "3qhn43ae4kburlm3m",
+        "reviews": [
+            {
+                "name": "review1",
+                "text": "nice",
+                "date": "25.06.2020"
+            },
+            {
+                "name": "review2",
+                "text": "awesome",
+                "date": "25.06.2020"
+            }
+        ],
+        "imageUrl": "http://localhost:3000/img/projects/3qhn43ae4kburlm3m.png"
+    }
+]
