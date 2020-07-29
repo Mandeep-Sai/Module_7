@@ -1,20 +1,20 @@
 const express = require("express");
 const q2m = require("query-to-mongo");
-const projectModel = require("./schema");
+const reviewModel = require("./schema");
 
 const router = express.Router();
 
-// GET all projects
+// GET all reviews
 router.get("/", async (req, res) => {
   try {
     const query = q2m(req.query);
     //console.log(query);
-    const projects = await projectModel
+    const reviews = await reviewModel
       .find()
       .limit(query.options.limit)
       .skip(query.options.skip)
       .sort(query.options.sort);
-    res.send(projects);
+    res.send(reviews);
   } catch (error) {
     console.log(error);
   }
@@ -23,17 +23,8 @@ router.get("/", async (req, res) => {
 //GET project by ID
 router.get("/:id", async (req, res) => {
   try {
-    const project = await projectModel.find({ studentId: req.params.id });
-    res.send(project);
-  } catch (error) {
-    console.log(error);
-  }
-});
-//
-router.get("/project/:id", async (req, res) => {
-  try {
-    const project = await projectModel.findById(req.params.id);
-    res.send(project);
+    const review = await reviewModel.find({ projectId: req.params.id });
+    res.send(review);
   } catch (error) {
     console.log(error);
   }
@@ -43,8 +34,8 @@ router.get("/project/:id", async (req, res) => {
 router.post("/", async (req, res, next) => {
   try {
     console.log(req.body);
-    const newProject = new projectModel(req.body);
-    await newProject.save();
+    const newReview = new reviewModel(req.body);
+    await newReview.save();
     res.send(req.body);
   } catch (error) {
     //next(error);
@@ -52,21 +43,10 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-//POST checkmail
-router.post("/checkEmail", async (req, res) => {
-  const checkEmail = await projectModel.find({ email: req.body.email });
-  console.log(checkEmail);
-  if (checkEmail.length !== 0) {
-    res.send("student with same email exists");
-  } else {
-    res.send("email available");
-  }
-});
-
 //EDIT or PUT by ID
 router.put("/:id", async (req, res) => {
   try {
-    await projectModel.findByIdAndUpdate(req.params.id, req.body);
+    await reviewModel.findByIdAndUpdate(req.params.id, req.body);
     res.send("Edited Successfully");
   } catch (error) {
     console.log(error);
@@ -76,7 +56,7 @@ router.put("/:id", async (req, res) => {
 //DELETE by ID
 router.delete("/:id", async (req, res) => {
   try {
-    await projectModel.findByIdAndDelete(req.params.id);
+    await reviewModel.findByIdAndDelete(req.params.id);
     res.send("Deleted Successfully");
   } catch (error) {
     console.log(error);

@@ -9,7 +9,13 @@ import {
   Form,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
+const mapStateToProps = (state) => state;
+
+const mapDispatchToProps = (dispatch) => ({
+  dataLoaded: () => dispatch({ type: "LOADING_COMPLETE" }),
+});
 export class student extends Component {
   constructor(props) {
     super(props);
@@ -46,6 +52,7 @@ export class student extends Component {
     console.log(projects);
     this.setState({ studentInfo, projects });
     // this.setState({ studentInfo, projects: studentInfo.projects });
+    setTimeout(this.props.dataLoaded, 1500);
   };
   delProject = async (id) => {
     let response = await fetch("http://127.0.0.1:3003/projects/" + id, {
@@ -100,174 +107,192 @@ export class student extends Component {
   render() {
     return (
       <Container className="mt-5">
-        <Row>
-          <Col xs={4}>
-            <img src={`https://placehold.it/200x200`} alt="" />
-          </Col>
-          <Col>
-            <p>
-              Name: <b>{this.state.studentInfo.name}</b>
-            </p>
-            <p>
-              Surname: <b>{this.state.studentInfo.surname}</b>
-            </p>
-            <p>
-              Email: <b>{this.state.studentInfo.email}</b>
-            </p>
-            <p>
-              Date of Birth: <b>{this.state.studentInfo.dateOfBirth}</b>
-            </p>
-          </Col>
-        </Row>
-        <Row className="mt-5">
-          <p className="display-4 text-center">Projects</p>
-          {this.state.projects.length ? (
-            <Table striped bordered hover size="sm">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Start Date</th>
-                  <th>End Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.state.projects.map((project) => {
-                  return (
+        {this.props.loading ? (
+          <div
+            className="col col-12 d-flex justify-content-center"
+            id="loadingAnimation"
+          >
+            <img src="https://i.stack.imgur.com/h6viz.gif" alt="" />
+          </div>
+        ) : (
+          <>
+            <Row>
+              <Col xs={4}>
+                <img src={`https://placehold.it/200x200`} alt="" />
+              </Col>
+              <Col>
+                <p>
+                  Name: <b>{this.state.studentInfo.name}</b>
+                </p>
+                <p>
+                  Surname: <b>{this.state.studentInfo.surname}</b>
+                </p>
+                <p>
+                  Email: <b>{this.state.studentInfo.email}</b>
+                </p>
+                <p>
+                  Date of Birth: <b>{this.state.studentInfo.dateOfBirth}</b>
+                </p>
+              </Col>
+            </Row>
+            <Row className="mt-5">
+              <p className="display-4 text-center">Projects</p>
+              {this.state.projects ? (
+                <Table striped bordered hover size="sm">
+                  <thead>
                     <tr>
-                      <td>
-                        <Link to={`/project/${project._id}`}>
-                          {project.name}
-                        </Link>{" "}
-                      </td>
-                      <td>{project.description}</td>
-                      <td>{project.startDate.slice(0, -14)}</td>
-                      <td>{project.endDate.slice(0, -14)}</td>
-                      <td>
-                        {" "}
-                        <Button
-                          variant="danger"
-                          onClick={() => this.delProject(project._id)}
-                        >
-                          Delete
-                        </Button>
-                      </td>
-                      <td>
-                        {" "}
-                        <Button
-                          variant="info"
-                          onClick={() => this.editProject(project)}
-                        >
-                          Edit
-                        </Button>
-                      </td>
+                      <th>Name</th>
+                      <th>Description</th>
+                      <th>Start Date</th>
+                      <th>End Date</th>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
-          ) : null}
-        </Row>
-        <Button variant="info" onClick={() => this.setState({ show: true })}>
-          Add a Project
-        </Button>
-        <Modal
-          show={this.state.show}
-          onHide={this.handleClose}
-          backdrop="static"
-          keyboard={false}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title className="text-center">Add a Project</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form>
-              <Form.Group as={Row}>
-                <Form.Label column sm={3}>
-                  Name
-                </Form.Label>
-                <Col sm={9}>
-                  <Form.Control
-                    onChange={this.updateForm}
-                    id="name"
-                    type="text"
-                    value={this.state.edit ? this.state.project.name : null}
-                    placeholder="Name"
-                  />
-                </Col>
-              </Form.Group>
-              <Form.Group as={Row}>
-                <Form.Label column sm={3}>
-                  Description
-                </Form.Label>
-                <Col sm={9}>
-                  <Form.Control
-                    onChange={this.updateForm}
-                    id="description"
-                    type="text"
-                    value={
-                      this.state.edit ? this.state.project.description : null
+                  </thead>
+                  <tbody>
+                    {this.state.projects.map((project) => {
+                      return (
+                        <tr>
+                          <td>
+                            <Link to={`/project/${project._id}`}>
+                              {project.name}
+                            </Link>{" "}
+                          </td>
+                          <td>{project.description}</td>
+                          <td>{project.startDate.slice(0, -14)}</td>
+                          <td>{project.endDate.slice(0, -14)}</td>
+                          <td>
+                            {" "}
+                            <Button
+                              variant="danger"
+                              onClick={() => this.delProject(project._id)}
+                            >
+                              Delete
+                            </Button>
+                          </td>
+                          <td>
+                            {" "}
+                            <Button
+                              variant="info"
+                              onClick={() => this.editProject(project)}
+                            >
+                              Edit
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+              ) : null}
+            </Row>
+            <Button
+              variant="info"
+              onClick={() => this.setState({ show: true })}
+            >
+              Add a Project
+            </Button>
+            <Modal
+              show={this.state.show}
+              onHide={this.handleClose}
+              backdrop="static"
+              keyboard={false}
+            >
+              <Modal.Header closeButton>
+                <Modal.Title className="text-center">Add a Project</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form>
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={3}>
+                      Name
+                    </Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        onChange={this.updateForm}
+                        id="name"
+                        type="text"
+                        value={this.state.edit ? this.state.project.name : null}
+                        placeholder="Name"
+                      />
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={3}>
+                      Description
+                    </Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        onChange={this.updateForm}
+                        id="description"
+                        type="text"
+                        value={
+                          this.state.edit
+                            ? this.state.project.description
+                            : null
+                        }
+                        placeholder="Short description"
+                      />
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={3}>
+                      Start date
+                    </Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        onChange={this.updateForm}
+                        id="startDate"
+                        value={
+                          this.state.edit
+                            ? this.state.project.startDate.slice(0, 10)
+                            : null
+                        }
+                        type="date"
+                        placeholder="Start"
+                      />
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={3}>
+                      End date
+                    </Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        onChange={this.updateForm}
+                        id="endDate"
+                        value={
+                          this.state.edit
+                            ? this.state.project.endDate.slice(0, 10)
+                            : null
+                        }
+                        type="date"
+                        placeholder="End"
+                      />
+                    </Col>
+                  </Form.Group>
+                </Form>
+              </Modal.Body>
+              <Modal.Footer>
+                {this.state.edit ? (
+                  <Button
+                    variant="primary"
+                    onClick={() =>
+                      this.sendEditedProject(this.state.project._id)
                     }
-                    placeholder="Short description"
-                  />
-                </Col>
-              </Form.Group>
-              <Form.Group as={Row}>
-                <Form.Label column sm={3}>
-                  Start date
-                </Form.Label>
-                <Col sm={9}>
-                  <Form.Control
-                    onChange={this.updateForm}
-                    id="startDate"
-                    value={
-                      this.state.edit
-                        ? this.state.project.startDate.slice(0, 10)
-                        : null
-                    }
-                    type="date"
-                    placeholder="Start"
-                  />
-                </Col>
-              </Form.Group>
-              <Form.Group as={Row}>
-                <Form.Label column sm={3}>
-                  End date
-                </Form.Label>
-                <Col sm={9}>
-                  <Form.Control
-                    onChange={this.updateForm}
-                    id="endDate"
-                    value={
-                      this.state.edit
-                        ? this.state.project.endDate.slice(0, 10)
-                        : null
-                    }
-                    type="date"
-                    placeholder="End"
-                  />
-                </Col>
-              </Form.Group>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            {this.state.edit ? (
-              <Button
-                variant="primary"
-                onClick={() => this.sendEditedProject(this.state.project._id)}
-              >
-                Edit
-              </Button>
-            ) : (
-              <Button variant="primary" onClick={() => this.sendProject()}>
-                Save
-              </Button>
-            )}
-          </Modal.Footer>
-        </Modal>
+                  >
+                    Edit
+                  </Button>
+                ) : (
+                  <Button variant="primary" onClick={() => this.sendProject()}>
+                    Save
+                  </Button>
+                )}
+              </Modal.Footer>
+            </Modal>
+          </>
+        )}
       </Container>
     );
   }
 }
 
-export default student;
+export default connect(mapStateToProps, mapDispatchToProps)(student);
