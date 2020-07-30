@@ -14,8 +14,20 @@ import { connect } from "react-redux";
 const mapStateToProps = (state) => state;
 
 const mapDispatchToProps = (dispatch) => ({
-  dataLoaded: () => dispatch({ type: "LOADING_COMPLETE" }),
+  loadWithThunk: (id) => dispatch(studentInfo(id)),
+  // dataLoaded: () => dispatch({ type: "LOADING_COMPLETE" }),
+  unmounted: () => dispatch({ type: "UNMOUNTED" }),
 });
+const studentInfo = (id) => {
+  return async (dispatch, getState) => {
+    let response = await fetch(`http://127.0.0.1:3003/students/${id}`);
+    let student = await response.json();
+    dispatch({
+      type: "LOAD_STUDENT",
+      payload: student,
+    });
+  };
+};
 export class student extends Component {
   constructor(props) {
     super(props);
@@ -52,7 +64,10 @@ export class student extends Component {
     console.log(projects);
     this.setState({ studentInfo, projects });
     // this.setState({ studentInfo, projects: studentInfo.projects });
-    setTimeout(this.props.dataLoaded, 1500);
+    setTimeout(() => this.props.loadWithThunk(this.state.studentId), 1000);
+  };
+  componentWillMount = () => {
+    this.props.unmounted();
   };
   delProject = async (id) => {
     let response = await fetch("http://127.0.0.1:3003/projects/" + id, {
