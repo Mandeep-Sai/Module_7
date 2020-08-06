@@ -9,6 +9,7 @@ const connOpt = {
   transports: ["websocket"],
 };
 let socket = io("https://striveschool.herokuapp.com/", connOpt);
+
 function App() {
   const [username, setUsername] = useState(null);
   const [message, setMessage] = useState(null);
