@@ -36,6 +36,10 @@ const studentSchema = new Schema({
     },
   },
   country: String,
+  password: {
+    type: String,
+    required: true,
+  },
 });
 
 studentSchema.post("validate", function (error, doc, next) {

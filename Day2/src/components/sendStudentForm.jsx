@@ -12,6 +12,7 @@ class sendStudentForm extends Component {
       email: "",
       dateOfBirth: "",
       country: "",
+      password: "",
     },
   };
 
@@ -22,7 +23,7 @@ class sendStudentForm extends Component {
     this.setState({ formInfo });
   };
   sendInfo = async () => {
-    let response = await fetch("http://127.0.0.1:3003/students", {
+    let response = await fetch("http://127.0.0.1:3003/students/register", {
       method: "POST",
       body: JSON.stringify(this.state.formInfo),
       headers: new Headers({
@@ -102,6 +103,19 @@ class sendStudentForm extends Component {
                 id="country"
                 type="text"
                 placeholder="Country"
+              />
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row}>
+            <Form.Label column sm={2}>
+              Password
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                onChange={this.updateForm}
+                id="password"
+                type="text"
+                placeholder="Password"
               />
             </Col>
           </Form.Group>
