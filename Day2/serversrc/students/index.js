@@ -39,8 +39,9 @@ router.get("/:id", async (req, res) => {
 // using jwt token
 router.get("/me", async (req, res) => {
   try {
-    console.log(req.headers);
-    const token = req.headers.authorization.split(" ")[1];
+    console.log(req.cookies.accessToken);
+    // const token = req.headers.authorization.split(" ")[1];
+    const token = req.cookies.accessToken;
     const decoded = await jwt.verify(token, process.env.SECRET_KEY);
     const student = await studentModel.findById(decoded.id);
     res.send(student);
@@ -100,7 +101,7 @@ router.get(
     try {
       console.log(req.user);
       const { token } = req.user.tokens;
-      res.cookie("accessToken", token);
+      res.cookie("accessToken", token, { httpOnly: true });
       res.status(200).redirect("http://localhost:3004/me");
     } catch (error) {
       console.log(error);

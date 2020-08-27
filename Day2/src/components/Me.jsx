@@ -11,13 +11,11 @@ export class Me extends Component {
     };
   }
   componentDidMount = async () => {
-    const cookie = Cookies.get("accessToken");
     let response = await fetch("http://localhost:3003/students/me", {
       method: "GET",
       credentials: "include",
       headers: new Headers({
         "content-type": "application/json",
-        Authorization: `Bearer ${cookie}`,
       }),
     });
     if (response.ok) {
