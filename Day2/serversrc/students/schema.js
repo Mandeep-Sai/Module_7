@@ -38,8 +38,8 @@ const studentSchema = new Schema({
   country: String,
   password: {
     type: String,
-    required: true,
   },
+  googleId: String,
 });
 
 studentSchema.post("validate", function (error, doc, next) {

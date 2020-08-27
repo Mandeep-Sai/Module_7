@@ -74,6 +74,11 @@ export class Login extends Component {
           >
             Submit
           </Button>
+          <a href="http://localhost:3003/students/googleLogin">
+            <Button variant="info" style={{ display: "block", margin: "auto" }}>
+              Login with Google
+            </Button>
+          </a>
         </Form>
       </Container>
     );

@@ -4,6 +4,7 @@ const studentModel = require("./schema");
 const q2m = require("query-to-mongo");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const passport = require("passport");
 
 const router = express.Router();
 
@@ -38,6 +39,7 @@ router.get("/:id", async (req, res) => {
 // using jwt token
 router.get("/me", async (req, res) => {
   try {
+    console.log(req.headers);
     const token = req.headers.authorization.split(" ")[1];
     const decoded = await jwt.verify(token, process.env.SECRET_KEY);
     const student = await studentModel.findById(decoded.id);
@@ -87,7 +89,24 @@ router.post("/login", async (req, res) => {
     res.send("Invalid credentials");
   }
 });
-
+router.get(
+  "/googleLogin",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+router.get(
+  "/googleRedirect",
+  passport.authenticate("google"),
+  async (req, res) => {
+    try {
+      console.log(req.user);
+      const { token } = req.user.tokens;
+      res.cookie("accessToken", token);
+      res.status(200).redirect("http://localhost:3004/me");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 //POST project for a specific student
 
 router.post("/projects/:id", async (req, res) => {
